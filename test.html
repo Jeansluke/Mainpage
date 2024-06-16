@@ -181,7 +181,7 @@
 
             if (money < 10) {
                 showPhoneCallModal();
-                return;
+                return; // Stop spinning if balance is less than $10
             }
 
             money -= 10; // Deduct $10 per spin
