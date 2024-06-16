@@ -25,11 +25,11 @@
             background-color: #3B3B3B;
             border-radius: 10px;
             width: 80%;
-            max-width: 600px;
+            max-width: 800px;
         }
         .slot {
             width: 100px;
-            height: 100px;
+            height: 300px;
             border: 2px solid #000;
             overflow: hidden;
             margin: 0 10px;
@@ -54,7 +54,7 @@
             align-items: center;
             font-size: 2em;
         }
-        .result, .money {
+        .result, .money, .balance, .bet, .win {
             font-size: 1.5em;
             margin-top: 20px;
         }
@@ -126,9 +126,15 @@
         <div class="slot" id="slot2"></div>
         <!-- Slot 3 -->
         <div class="slot" id="slot3"></div>
+        <!-- Slot 4 -->
+        <div class="slot" id="slot4"></div>
+        <!-- Slot 5 -->
+        <div class="slot" id="slot5"></div>
     </div>
     <button id="spinButton" onclick="spin()">Spin</button>
-    <div class="money" id="money">Money: $<span id="moneyAmount">100</span></div>
+    <div class="balance">BALANCE: $<span id="balanceAmount">40.00</span></div>
+    <div class="bet">BET: $<span id="betAmount">0.25</span></div>
+    <div class="win">WIN: $<span id="winAmount">0.00</span></div>
     <div id="result" class="result"></div>
 
     <!-- Phone Call Modal -->
@@ -144,7 +150,9 @@
 
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7']; // Symbols array
-        var money = 100; // Starting money
+        var balance = 40.00; // Starting balance
+        var bet = 0.25; // Fixed bet amount
+        var win = 0.00; // Win amount
         var canSpin = true; // Flag to allow spinning
         var callDeclined = false; // Flag to track if call was declined
 
@@ -157,18 +165,26 @@
                 return; // Don't spin if spinning is disabled
             }
 
-            if (money <= -10 && !callDeclined) {
+            if (balance <= 0 && !callDeclined) {
                 showPhoneCallModal();
-                return; // Stop spinning if balance is -10 or below and call not declined
+                return; // Stop spinning if balance is 0 or below and call not declined
             }
 
-            money -= 10; // Deduct $10 per spin
-            document.getElementById('moneyAmount').innerText = money;
+            balance -= bet; // Deduct bet amount per spin
+            win = 0; // Reset win amount
+            document.getElementById('balanceAmount').innerText = balance.toFixed(2);
+            document.getElementById('winAmount').innerText = win.toFixed(2);
 
             document.getElementById('result').innerText = "";
             document.getElementById('spinButton').disabled = true;
 
-            var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
+            var slots = [
+                document.getElementById('slot1'),
+                document.getElementById('slot2'),
+                document.getElementById('slot3'),
+                document.getElementById('slot4'),
+                document.getElementById('slot5')
+            ];
             var finalSymbols = [];
 
             canSpin = false; // Disable spinning during animation
@@ -203,7 +219,7 @@
                     symbolContainer.style.transform = `translateY(${translateY}px)`; // Position the symbols
                     finalSymbols.push(symbols[randomIndex]);
 
-                    if (index === 2) { // Last slot to spin
+                    if (index === 4) { // Last slot to spin
                         checkResult(finalSymbols);
                         document.getElementById('spinButton').disabled = false;
                         canSpin = true; // Allow spinning again
@@ -213,14 +229,16 @@
         }
 
         function checkResult(finalSymbols) {
-            var [slot1, slot2, slot3] = finalSymbols;
-            if (slot1 === slot2 && slot2 === slot3) {
+            var [slot1, slot2, slot3, slot4, slot5] = finalSymbols;
+            if (slot1 === slot2 && slot2 === slot3 && slot3 === slot4 && slot4 === slot5) {
                 document.getElementById('result').innerText = "You win!";
-                money += 50; // Win $50
+                win = 50; // Win amount
+                balance += win; // Add win amount to balance
             } else {
                 document.getElementById('result').innerText = "Try again!";
             }
-            document.getElementById('moneyAmount').innerText = money;
+            document.getElementById('balanceAmount').innerText = balance.toFixed(2);
+            document.getElementById('winAmount').innerText = win.toFixed(2);
         }
 
         function showPhoneCallModal() {
@@ -232,18 +250,17 @@
         function answerCall() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
-            canSpin = true; // Allow spinning after answering
-            document.getElementById('spinButton').disabled = false; // Enable spin button
-            callDeclined = true; // Mark call as declined to allow further spins
+            alert("Bank: Your account balance is below 0. Please deposit funds to continue playing.");
+            balance = 40.00; // Reset balance after answering the call
+            document.getElementById('balanceAmount').innerText = balance.toFixed(2);
+            canSpin = true; // Re-enable spinning
         }
 
         function dismissModal() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            canSpin = true; // Allow spinning after dismissing
-            document.getElementById('spinButton').disabled = false; // Enable spin button
-            callDeclined = true; // Mark call as declined to allow further spins
+            canSpin = true; // Re-enable spinning
+            callDeclined = true; // Set flag to indicate call was declined
         }
     </script>
 </body>
