@@ -45,6 +45,10 @@
             font-size: 1.5em;
             margin-top: 20px;
         }
+        .money {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
         @keyframes spin {
             0% { transform: translateY(0); }
             100% { transform: translateY(-500px); }
@@ -101,20 +105,26 @@
         </div>
     </div>
     <button id="spinButton" onclick="spin()">Spin</button>
+    <div class="money" id="money">Money: $<span id="moneyAmount">100</span></div>
     <div id="result" class="result"></div>
 
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
-        var isSpinning = false;
+        var money = 100; // Starting money
 
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
         }
 
         function spin() {
-            if (isSpinning) return;
+            if (money < 10) {
+                alert("You don't have enough money to spin.");
+                return;
+            }
 
-            isSpinning = true;
+            money -= 10; // Deduct $10 per spin
+            document.getElementById('moneyAmount').innerText = money;
+
             document.getElementById('result').innerText = "";
             document.getElementById('spinButton').disabled = true;
 
@@ -139,7 +149,6 @@
 
                     if (index === 2) { // Last slot to spin
                         checkResult(finalSymbols);
-                        isSpinning = false;
                         document.getElementById('spinButton').disabled = false;
                     }
                 }, 2000 + (index * 500)); // Match the duration of the animation
@@ -150,9 +159,11 @@
             var [slot1, slot2, slot3] = finalSymbols;
             if (slot1 === slot2 && slot2 === slot3) {
                 document.getElementById('result').innerText = "You win!";
+                money += 50; // Win $50
             } else {
                 document.getElementById('result').innerText = "Try again!";
             }
+            document.getElementById('moneyAmount').innerText = money;
         }
     </script>
 </body>
