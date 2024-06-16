@@ -49,6 +49,27 @@
             font-size: 1.2em;
             margin-top: 10px;
         }
+        #bankCallModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .modal-buttons {
+            margin-top: 20px;
+        }
         @keyframes spin {
             0% { transform: translateY(0); }
             100% { transform: translateY(-500px); }
@@ -108,6 +129,16 @@
     <div class="money" id="money">Money: $<span id="moneyAmount">100</span></div>
     <div id="result" class="result"></div>
 
+    <!-- Bank Call Modal -->
+    <div id="bankCallModal">
+        <div class="modal-content">
+            <p>Your bank account is below -$10. Please deposit funds to continue playing.</p>
+            <div class="modal-buttons">
+                <button onclick="dismissModal()">Dismiss</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
         var money = 100; // Starting money
@@ -118,7 +149,7 @@
 
         function spin() {
             if (money < 10) {
-                alert("You don't have enough money to spin.");
+                showBankCallModal();
                 return;
             }
 
@@ -164,6 +195,16 @@
                 document.getElementById('result').innerText = "Try again!";
             }
             document.getElementById('moneyAmount').innerText = money;
+        }
+
+        function showBankCallModal() {
+            var modal = document.getElementById('bankCallModal');
+            modal.style.display = 'flex';
+        }
+
+        function dismissModal() {
+            var modal = document.getElementById('bankCallModal');
+            modal.style.display = 'none';
         }
     </script>
 </body>
