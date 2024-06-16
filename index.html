@@ -25,26 +25,63 @@
             font-size: 2em;
             margin: 0 10px;
             background-color: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+        }
+        .symbols {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: transform 1s ease-out;
+        }
+        .symbol {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
         }
         .result {
             font-size: 1.5em;
             margin-top: 20px;
-        }
-        @keyframes spin {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-300%); }
-        }
-        .spinning {
-            animation: spin 1s ease-in-out infinite;
         }
     </style>
 </head>
 <body>
     <h1>Slot Machine</h1>
     <div class="slot-machine">
-        <div id="slot1" class="slot">🍒</div>
-        <div id="slot2" class="slot">🍒</div>
-        <div id="slot3" class="slot">🍒</div>
+        <div id="slot1" class="slot">
+            <div class="symbols">
+                <div class="symbol">🍒</div>
+                <div class="symbol">🍋</div>
+                <div class="symbol">🍉</div>
+                <div class="symbol">⭐</div>
+                <div class="symbol">7</div>
+            </div>
+        </div>
+        <div id="slot2" class="slot">
+            <div class="symbols">
+                <div class="symbol">🍒</div>
+                <div class="symbol">🍋</div>
+                <div class="symbol">🍉</div>
+                <div class="symbol">⭐</div>
+                <div class="symbol">7</div>
+            </div>
+        </div>
+        <div id="slot3" class="slot">
+            <div class="symbols">
+                <div class="symbol">🍒</div>
+                <div class="symbol">🍋</div>
+                <div class="symbol">🍉</div>
+                <div class="symbol">⭐</div>
+                <div class="symbol">7</div>
+            </div>
+        </div>
     </div>
     <button onclick="spin()">Spin</button>
     <div id="result" class="result"></div>
@@ -52,34 +89,39 @@
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
 
-        function getRandomSymbol() {
-            return symbols[Math.floor(Math.random() * symbols.length)];
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
         }
 
         function spin() {
             document.getElementById('result').innerText = "";
             var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
+            var finalSymbols = [];
 
-            slots.forEach(slot => {
-                slot.classList.add('spinning');
+            slots.forEach((slot, index) => {
+                var symbolContainer = slot.querySelector('.symbols');
+                var randomIndex = getRandomInt(symbols.length);
+                var translateY = -randomIndex * 100;
+
+                finalSymbols.push(symbols[randomIndex]);
+
+                symbolContainer.style.transform = `translateY(${translateY}%)`;
+
+                setTimeout(() => {
+                    if (index === 2) { // Last slot to spin
+                        checkResult(finalSymbols);
+                    }
+                }, 1000 + (index * 500)); // Stagger the spins
             });
+        }
 
-            setTimeout(() => {
-                slots.forEach(slot => {
-                    slot.classList.remove('spinning');
-                    slot.innerText = getRandomSymbol();
-                });
-
-                var slot1 = slots[0].innerText;
-                var slot2 = slots[1].innerText;
-                var slot3 = slots[2].innerText;
-
-                if (slot1 === slot2 && slot2 === slot3) {
-                    document.getElementById('result').innerText = "You win!";
-                } else {
-                    document.getElementById('result').innerText = "Try again!";
-                }
-            }, 1000);
+        function checkResult(finalSymbols) {
+            var [slot1, slot2, slot3] = finalSymbols;
+            if (slot1 === slot2 && slot2 === slot3) {
+                document.getElementById('result').innerText = "You win!";
+            } else {
+                document.getElementById('result').innerText = "Try again!";
+            }
         }
     </script>
 </body>
