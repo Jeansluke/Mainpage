@@ -179,9 +179,9 @@
                 return; // Don't spin if spinning is disabled
             }
 
-            if (money < 10) {
+            if (money < 0) {
                 showPhoneCallModal();
-                return; // Stop spinning if balance is less than $10
+                return; // Stop spinning if balance is below 0
             }
 
             money -= 10; // Deduct $10 per spin
@@ -234,12 +234,13 @@
         function showPhoneCallModal() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'block';
+            canSpin = false; // Disable spinning while modal is shown
         }
 
         function answerCall() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            // You can add logic here to handle answering the call, e.g., show bank communication message
+            // Logic to handle answering the call
             alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
         }
 
