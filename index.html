@@ -31,7 +31,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: spin infinite linear;
+            animation: spin 1s linear infinite;
         }
         .symbol {
             width: 100%;
@@ -61,6 +61,7 @@
                 <div class="symbol">🍉</div>
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
+                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -75,6 +76,7 @@
                 <div class="symbol">🍉</div>
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
+                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -89,6 +91,7 @@
                 <div class="symbol">🍉</div>
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
+                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -114,12 +117,16 @@
 
             slots.forEach((slot, index) => {
                 var symbolContainer = slot.querySelector('.symbols');
-                symbolContainer.style.animationDuration = `${2 + index}s`; // Slightly different durations for each slot
+                var randomIndex = getRandomInt(symbols.length);
+                var translateY = -randomIndex * 100;
 
+                // Remove previous animation if any
+                symbolContainer.style.animation = 'none';
+                symbolContainer.offsetHeight; // Trigger reflow
+                symbolContainer.style.animation = `spin 1s linear infinite`;
+
+                // Stop the spinning after some time
                 setTimeout(() => {
-                    var randomIndex = getRandomInt(symbols.length);
-                    var translateY = -randomIndex * 100;
-
                     symbolContainer.style.animation = 'none'; // Stop the animation
                     symbolContainer.style.transform = `translateY(${translateY}px)`; // Position the symbols
                     finalSymbols.push(symbols[randomIndex]);
@@ -127,7 +134,7 @@
                     if (index === 2) { // Last slot to spin
                         checkResult(finalSymbols);
                     }
-                }, (2 + index) * 1000); // Match the duration of the animation
+                }, 2000 + (index * 500)); // Match the duration of the animation
             });
         }
 
