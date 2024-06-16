@@ -7,35 +7,27 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #8B0000; /* Dark red background */
-            color: #fff;
             text-align: center;
             margin: 0;
-            padding: 0;
-        }
-        .header {
-            background-color: #550000;
-            padding: 10px;
+            background-color: #7a0b0b;
         }
         .slot-machine {
             display: flex;
             justify-content: center;
-            margin: 50px auto;
+            margin: 20px 0;
+            background-color: #4e4e4e;
             padding: 20px;
-            background-color: #3B3B3B;
             border-radius: 10px;
-            width: 80%;
-            max-width: 800px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         .slot {
             width: 100px;
             height: 300px;
-            border: 2px solid #000;
             overflow: hidden;
             margin: 0 10px;
             background-color: #000;
-            position: relative;
             border-radius: 10px;
+            position: relative;
         }
         .symbols {
             position: absolute;
@@ -44,7 +36,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: spin 1s linear infinite;
         }
         .symbol {
             width: 100%;
@@ -53,24 +44,16 @@
             justify-content: center;
             align-items: center;
             font-size: 2em;
+            color: #fff;
         }
-        .result, .money, .balance, .bet, .win {
+        .result {
             font-size: 1.5em;
             margin-top: 20px;
         }
-        #spinButton {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            background-color: #4CAF50;
+        .balance {
+            font-size: 1.2em;
+            margin-top: 10px;
             color: #fff;
-            border: none;
-            border-radius: 5px;
-        }
-        @keyframes spin {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-500px); }
         }
         #phoneCallModal {
             display: none;
@@ -84,7 +67,6 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             z-index: 999;
-            color: #000;
         }
         .modal-content {
             text-align: center;
@@ -113,12 +95,24 @@
         .modal-buttons button:hover {
             opacity: 0.8;
         }
+        #spinButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-500px); }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Slot Machine</h1>
-    </div>
+    <h1 style="color: #fff;">Slot Machine</h1>
     <div class="slot-machine">
         <!-- Slot 1 -->
         <div class="slot" id="slot1"></div>
@@ -132,9 +126,7 @@
         <div class="slot" id="slot5"></div>
     </div>
     <button id="spinButton" onclick="spin()">Spin</button>
-    <div class="balance">BALANCE: $<span id="balanceAmount">40.00</span></div>
-    <div class="bet">BET: $<span id="betAmount">0.25</span></div>
-    <div class="win">WIN: $<span id="winAmount">0.00</span></div>
+    <div class="balance" id="balance">Balance: $<span id="balanceAmount">40.00</span></div>
     <div id="result" class="result"></div>
 
     <!-- Phone Call Modal -->
@@ -151,8 +143,6 @@
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7']; // Symbols array
         var balance = 40.00; // Starting balance
-        var bet = 0.25; // Fixed bet amount
-        var win = 0.00; // Win amount
         var canSpin = true; // Flag to allow spinning
         var callDeclined = false; // Flag to track if call was declined
 
@@ -165,22 +155,20 @@
                 return; // Don't spin if spinning is disabled
             }
 
-            if (balance <= 0 && !callDeclined) {
+            if (balance <= -10 && !callDeclined) {
                 showPhoneCallModal();
-                return; // Stop spinning if balance is 0 or below and call not declined
+                return; // Stop spinning if balance is -10 or below and call not declined
             }
 
-            balance -= bet; // Deduct bet amount per spin
-            win = 0; // Reset win amount
+            balance -= 0.25; // Deduct $0.25 per spin
             document.getElementById('balanceAmount').innerText = balance.toFixed(2);
-            document.getElementById('winAmount').innerText = win.toFixed(2);
 
             document.getElementById('result').innerText = "";
             document.getElementById('spinButton').disabled = true;
 
             var slots = [
-                document.getElementById('slot1'),
-                document.getElementById('slot2'),
+                document.getElementById('slot1'), 
+                document.getElementById('slot2'), 
                 document.getElementById('slot3'),
                 document.getElementById('slot4'),
                 document.getElementById('slot5')
@@ -219,7 +207,7 @@
                     symbolContainer.style.transform = `translateY(${translateY}px)`; // Position the symbols
                     finalSymbols.push(symbols[randomIndex]);
 
-                    if (index === 4) { // Last slot to spin
+                    if (index === slots.length - 1) { // Last slot to spin
                         checkResult(finalSymbols);
                         document.getElementById('spinButton').disabled = false;
                         canSpin = true; // Allow spinning again
@@ -229,16 +217,14 @@
         }
 
         function checkResult(finalSymbols) {
-            var [slot1, slot2, slot3, slot4, slot5] = finalSymbols;
-            if (slot1 === slot2 && slot2 === slot3 && slot3 === slot4 && slot4 === slot5) {
+            var isWin = finalSymbols.every(symbol => symbol === finalSymbols[0]);
+            if (isWin) {
                 document.getElementById('result').innerText = "You win!";
-                win = 50; // Win amount
-                balance += win; // Add win amount to balance
+                balance += 5.00; // Win $5
             } else {
                 document.getElementById('result').innerText = "Try again!";
             }
             document.getElementById('balanceAmount').innerText = balance.toFixed(2);
-            document.getElementById('winAmount').innerText = win.toFixed(2);
         }
 
         function showPhoneCallModal() {
@@ -250,7 +236,7 @@
         function answerCall() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            alert("Bank: Your account balance is below 0. Please deposit funds to continue playing.");
+            alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
             balance = 40.00; // Reset balance after answering the call
             document.getElementById('balanceAmount').innerText = balance.toFixed(2);
             canSpin = true; // Re-enable spinning
