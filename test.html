@@ -104,51 +104,12 @@
 <body>
     <h1>Slot Machine</h1>
     <div class="slot-machine">
-        <div id="slot1" class="slot">
-            <div class="symbols">
-                <div class="symbol">🍒</div>
-                <div class="symbol">🍋</div>
-                <div class="symbol">🍉</div>
-                <div class="symbol">⭐</div>
-                <div class="symbol">7</div>
-                <!-- Repeat symbols for looping effect -->
-                <div class="symbol">🍒</div>
-                <div class="symbol">🍋</div>
-                <div class="symbol">🍉</div>
-                <div class="symbol">⭐</div>
-                <div class="symbol">7</div>
-            </div>
-        </div>
-        <div id="slot2" class="slot">
-            <div class="symbols">
-                <div class="symbol">🍒</div>
-                <div class="symbol">🍋</div>
-                <div class="symbol">🍉</div>
-                <div class="symbol">⭐</div>
-                <div class="symbol">7</div>
-                <!-- Repeat symbols for looping effect -->
-                <div class="symbol">🍒</div>
-                <div class="symbol">🍋</div>
-                <div class="symbol">🍉</div>
-                <div class="symbol">⭐</div>
-                <div class="symbol">7</div>
-            </div>
-        </div>
-        <div id="slot3" class="slot">
-            <div class="symbols">
-                <div class="symbol">🍒</div>
-                <div class="symbol">🍋</div>
-                <div class="symbol">🍉</div>
-                <div class="symbol">⭐</div>
-                <div class="symbol">7</div>
-                <!-- Repeat symbols for looping effect -->
-                <div class="symbol">🍒</div>
-                <div class="symbol">🍋</div>
-                <div class="symbol">🍉</div>
-                <div class="symbol">⭐</div>
-                <div class="symbol">7</div>
-            </div>
-        </div>
+        <!-- Slot 1 -->
+        <div class="slot" id="slot1"></div>
+        <!-- Slot 2 -->
+        <div class="slot" id="slot2"></div>
+        <!-- Slot 3 -->
+        <div class="slot" id="slot3"></div>
     </div>
     <button id="spinButton" onclick="spin()">Spin</button>
     <div class="money" id="money">Money: $<span id="moneyAmount">100</span></div>
@@ -165,10 +126,11 @@
         </div>
     </div>
 
-    <button id="redirectButton" onclick="redirectToWebsite()">Go to main site</button>
+    <!-- Redirect button (optional) -->
+    <!-- <button id="redirectButton" onclick="redirectToWebsite()">Go to main site</button> -->
 
     <script>
-        var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
+        var symbols = ['🍒', '🍋', '🍉', '⭐', '7']; // Symbols array
         var money = 100; // Starting money
         var canSpin = true; // Flag to allow spinning
         var callDeclined = false; // Flag to track if call was declined
@@ -199,6 +161,20 @@
             canSpin = false; // Disable spinning during animation
 
             slots.forEach((slot, index) => {
+                var symbolsContainer = document.createElement('div');
+                symbolsContainer.classList.add('symbols');
+                
+                // Generate symbols
+                symbols.forEach(symbol => {
+                    var symbolDiv = document.createElement('div');
+                    symbolDiv.classList.add('symbol');
+                    symbolDiv.innerText = symbol;
+                    symbolsContainer.appendChild(symbolDiv);
+                });
+
+                slot.innerHTML = ''; // Clear previous symbols
+                slot.appendChild(symbolsContainer);
+
                 var symbolContainer = slot.querySelector('.symbols');
                 var randomIndex = getRandomInt(symbols.length);
                 var translateY = -randomIndex * 100;
@@ -257,8 +233,9 @@
             callDeclined = true; // Mark call as declined to allow further spins
         }
 
+        // Optional function to redirect to another page
         function redirectToWebsite() {
-            window.location.href = "https://jeansluke.github.io/Mainpage/index.html";
+            window.location.href = "https://example.com"; // Replace with your desired URL
         }
     </script>
 </body>
