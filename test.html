@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slot Machine with Leaderboard</title>
+    <title>Slot Machine</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -95,20 +95,9 @@
             font-size: 1em;
             cursor: pointer;
         }
-        #leaderboard {
-            margin-top: 50px;
-        }
-        #leaderboardList {
-            list-style-type: none;
-            padding: 0;
-            margin: 0 auto;
-            max-width: 400px;
-        }
-        #leaderboardList li {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-500px); }
         }
     </style>
 </head>
@@ -178,62 +167,7 @@
 
     <button id="redirectButton" onclick="redirectToWebsite()">Go to main site</button>
 
-    <!-- Leaderboard Section -->
-    <div id="leaderboard">
-        <h2>Leaderboard</h2>
-        <ul id="leaderboardList"></ul>
-    </div>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js"></script>
     <script>
-        // Initialize Firebase with GitHub Secrets
-        const firebaseConfig = {
-            apiKey: `${process.env.apiKey}`,
-            authDomain: `${process.env.authDomain}`,
-            projectId: `${process.env.projectId}`,
-            storageBucket: `${process.env.storageBucket}`,
-            messagingSenderId: `${process.env.messagingSenderId}`,
-            appId: `${process.env.appId}`,
-            databaseURL: `${process.env.databaseURL}`
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database(app);
-
-        // Function to update leaderboard
-        function updateLeaderboard() {
-            const leaderboardRef = database.ref('leaderboard');
-            leaderboardRef.once('value', (snapshot) => {
-                const leaderboard = snapshot.val();
-                const leaderboardList = document.getElementById('leaderboardList');
-                leaderboardList.innerHTML = '';
-                for (let player in leaderboard) {
-                    const li = document.createElement('li');
-                    li.textContent = `${player}: $${leaderboard[player]}`;
-                    leaderboardList.appendChild(li);
-                }
-            });
-        }
-
-        // Call updateLeaderboard on page load
-        updateLeaderboard();
-
-        // Function to add/update player score
-        function addPlayerScore(playerName, score) {
-            const playerRef = database.ref(`leaderboard/${playerName}`);
-            playerRef.set(score, (error) => {
-                if (error) {
-                    console.error('Error updating leaderboard:', error);
-                } else {
-                    updateLeaderboard();
-                }
-            });
-        }
-
-        // Function to spin the slot machine
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
         var money = 100; // Starting money
         var canSpin = true; // Flag to allow spinning
@@ -259,10 +193,6 @@
             document.getElementById('result').innerText = "";
             document.getElementById('spinButton').disabled = true;
 
-            var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
-            var finalSymbols = [];
-
-            canSpin
             var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
             var finalSymbols = [];
 
@@ -302,12 +232,6 @@
                 document.getElementById('result').innerText = "Try again!";
             }
             document.getElementById('moneyAmount').innerText = money;
-
-            // Add/update player score on Firebase leaderboard
-            var playerName = prompt("Enter your name for the leaderboard:");
-            if (playerName) {
-                addPlayerScore(playerName, money);
-            }
         }
 
         function showPhoneCallModal() {
