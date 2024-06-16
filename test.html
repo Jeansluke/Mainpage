@@ -167,8 +167,9 @@
 
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
-        var money = 10; // Starting money
+        var money = 100; // Starting money
         var canSpin = true; // Flag to allow spinning
+        var callDeclined = false; // Flag to track if call was declined
 
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
@@ -179,9 +180,9 @@
                 return; // Don't spin if spinning is disabled
             }
 
-            if (money <= -10) {
+            if (money <= -10 && !callDeclined) {
                 showPhoneCallModal();
-                return; // Stop spinning if balance is -10 or below
+                return; // Stop spinning if balance is -10 or below and call not declined
             }
 
             money -= 10; // Deduct $10 per spin
@@ -243,6 +244,7 @@
             alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
             canSpin = true; // Allow spinning after answering
             document.getElementById('spinButton').disabled = false; // Enable spin button
+            callDeclined = true; // Mark call as declined to allow further spins
         }
 
         function dismissModal() {
@@ -250,6 +252,7 @@
             modal.style.display = 'none';
             canSpin = true; // Allow spinning after dismissing
             document.getElementById('spinButton').disabled = false; // Enable spin button
+            callDeclined = true; // Mark call as declined to allow further spins
         }
     </script>
 </body>
