@@ -160,7 +160,7 @@
             <p>You have an incoming call from the bank.</p>
             <div class="modal-buttons">
                 <button class="answer" onclick="answerCall()">Answer</button>
-                <button class="decline" onclick="declineCall()">Decline</button>
+                <button class="decline" onclick="dismissModal()">Decline</button>
             </div>
         </div>
     </div>
@@ -235,7 +235,7 @@
             alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
         }
 
-        function declineCall() {
+        function dismissModal() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
             // Continue playing logic can be added here if needed
