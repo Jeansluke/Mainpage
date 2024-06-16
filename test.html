@@ -107,7 +107,7 @@
         }
         @keyframes spin {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-500px); }
+            100% { transform: translateY(-400px); }
         }
     </style>
 </head>
@@ -182,6 +182,14 @@
                 symbolsContainer.classList.add('symbols');
                 
                 // Generate symbols
+                symbols.forEach(symbol => {
+                    var symbolDiv = document.createElement('div');
+                    symbolDiv.classList.add('symbol');
+                    symbolDiv.innerText = symbol;
+                    symbolsContainer.appendChild(symbolDiv);
+                });
+
+                // Append a second set of symbols to ensure looping
                 symbols.forEach(symbol => {
                     var symbolDiv = document.createElement('div');
                     symbolDiv.classList.add('symbol');
