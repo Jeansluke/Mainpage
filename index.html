@@ -100,18 +100,24 @@
             </div>
         </div>
     </div>
-    <button onclick="spin()">Spin</button>
+    <button id="spinButton" onclick="spin()">Spin</button>
     <div id="result" class="result"></div>
 
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
+        var isSpinning = false;
 
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
         }
 
         function spin() {
+            if (isSpinning) return;
+
+            isSpinning = true;
             document.getElementById('result').innerText = "";
+            document.getElementById('spinButton').disabled = true;
+
             var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
             var finalSymbols = [];
 
@@ -133,6 +139,8 @@
 
                     if (index === 2) { // Last slot to spin
                         checkResult(finalSymbols);
+                        isSpinning = false;
+                        document.getElementById('spinButton').disabled = false;
                     }
                 }, 2000 + (index * 500)); // Match the duration of the animation
             });
