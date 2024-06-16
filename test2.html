@@ -89,16 +89,15 @@
         .modal-buttons button:hover {
             opacity: 0.8;
         }
+        .lock-button {
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
         #spinButton {
             margin-top: 20px;
             padding: 10px 20px;
             font-size: 1em;
-            cursor: pointer;
-        }
-        .lockButton {
-            margin-top: 10px;
-            padding: 5px 10px;
-            font-size: 0.8em;
             cursor: pointer;
         }
         @keyframes spin {
@@ -124,7 +123,7 @@
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
             </div>
-            <button class="lockButton" onclick="toggleLock(0)">Lock</button>
+            <button class="lock-button" onclick="toggleLock(0)">Lock</button>
         </div>
         <div id="slot2" class="slot">
             <div class="symbols">
@@ -140,7 +139,7 @@
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
             </div>
-            <button class="lockButton" onclick="toggleLock(1)">Lock</button>
+            <button class="lock-button" onclick="toggleLock(1)">Lock</button>
         </div>
         <div id="slot3" class="slot">
             <div class="symbols">
@@ -156,7 +155,7 @@
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
             </div>
-            <button class="lockButton" onclick="toggleLock(2)">Lock</button>
+            <button class="lock-button" onclick="toggleLock(2)">Lock</button>
         </div>
         <div id="slot4" class="slot">
             <div class="symbols">
@@ -172,7 +171,7 @@
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
             </div>
-            <button class="lockButton" onclick="toggleLock(3)">Lock</button>
+            <button class="lock-button" onclick="toggleLock(3)">Lock</button>
         </div>
         <div id="slot5" class="slot">
             <div class="symbols">
@@ -188,7 +187,7 @@
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
             </div>
-            <button class="lockButton" onclick="toggleLock(4)">Lock</button>
+            <button class="lock-button" onclick="toggleLock(4)">Lock</button>
         </div>
     </div>
     <button id="spinButton" onclick="spin()">Spin</button>
@@ -213,7 +212,7 @@
         var money = 100; // Starting money
         var canSpin = true; // Flag to allow spinning
         var callDeclined = false; // Flag to track if call was declined
-        var lockedSlots = [false, false, false, false, false]; // Track locked slots
+        var lockedSlots = [false, false, false, false, false]; // Array to track locked slots
 
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
@@ -221,8 +220,8 @@
 
         function toggleLock(slotIndex) {
             lockedSlots[slotIndex] = !lockedSlots[slotIndex];
-            var lockButton = document.querySelectorAll('.lockButton')[slotIndex];
-            lockButton.innerText = lockedSlots[slotIndex] ? 'Unlock' : 'Lock';
+            var button = document.getElementById('slot' + (slotIndex + 1)).querySelector('.lock-button');
+            button.innerText = lockedSlots[slotIndex] ? 'Unlock' : 'Lock';
         }
 
         function spin() {
@@ -241,52 +240,58 @@
             document.getElementById('result').innerText = "";
             document.getElementById('spinButton').disabled = true;
 
-            var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3'), document.getElementById('slot4'), document.getElementById('slot5')];
+            var slots = [
+                document.getElementById('slot1'),
+                document.getElementById('slot2'),
+                document.getElementById('slot3'),
+                document.getElementById('slot4'),
+                document.getElementById('slot5')
+            ];
             var finalSymbols = [];
 
             canSpin = false; // Disable spinning during animation
 
             slots.forEach((slot, index) => {
+                var symbolContainer = slot.querySelector('.symbols');
+                var randomIndex;
+
                 if (!lockedSlots[index]) {
-                    var symbolContainer = slot.querySelector('.symbols');
-                    var randomIndex = getRandomInt(symbols.length);
-                    var translateY = -randomIndex * 100;
-
-                    // Remove previous animation if any
-                    symbolContainer.style.animation = 'none';
-                    symbolContainer.offsetHeight; // Trigger reflow
-                    symbolContainer.style.animation = `spin 1s linear infinite`;
-
-                    // Stop the spinning after some time
-                    setTimeout(() => {
-                        symbolContainer.style.animation = 'none'; // Stop the animation
-                        symbolContainer.style.transform = `translateY(${translateY}px)`; // Position the symbols
-                        finalSymbols.push(symbols[randomIndex]);
-
-                        if (index === 4) { // Last slot to spin
-                            checkResult(finalSymbols);
-                            document.getElementById('spinButton').disabled = false;
-                            canSpin = true; // Allow spinning again
-                        }
-                    }, 2000 + (index * 500)); // Match the duration of the animation
+                    randomIndex = getRandomInt(symbols.length);
                 } else {
-                    var currentSymbol = slot.querySelector('.symbols .symbol:first-child').innerText;
-                    finalSymbols.push(currentSymbol);
+                    var currentSymbol = slot.querySelector('.symbol').innerText.trim();
+                    randomIndex = symbols.indexOf(currentSymbol);
+                }
+
+                var translateY = -randomIndex * 100;
+
+                // Remove previous animation if any
+                symbolContainer.style.animation = 'none';
+                symbolContainer.offsetHeight; // Trigger reflow
+                symbolContainer.style.animation = `spin 1s linear infinite`;
+
+                // Stop the spinning after some time
+                setTimeout(() => {
+                    symbolContainer.style.animation = 'none'; // Stop the animation
+                    symbolContainer.style.transform = `translateY(${translateY}px)`; // Position the symbols
+                    finalSymbols.push(symbols[randomIndex]);
 
                     if (index === 4) { // Last slot to spin
                         checkResult(finalSymbols);
                         document.getElementById('spinButton').disabled = false;
                         canSpin = true; // Allow spinning again
                     }
-                }
+                }, 2000 + (index * 500)); // Match the duration of the animation
             });
         }
 
         function checkResult(finalSymbols) {
             var [slot1, slot2, slot3, slot4, slot5] = finalSymbols;
             if (slot1 === slot2 && slot2 === slot3 && slot3 === slot4 && slot4 === slot5) {
-                document.getElementById('result').innerText = "You win!";
-                money += 50; // Win $50
+                document.getElementById('result').innerText = "Jackpot! You win $100!";
+                money += 100; // Win $100 for jackpot
+            } else if ((slot1 === slot2 && slot2 === slot3) || (slot2 === slot3 && slot3 === slot4) || (slot3 === slot4 && slot4 === slot5)) {
+                document.getElementById('result').innerText = "Three of a Kind! You win $50!";
+                money += 50; // Win $50 for three of a kind
             } else {
                 document.getElementById('result').innerText = "Try again!";
             }
@@ -322,3 +327,4 @@
     </script>
 </body>
 </html>
+
