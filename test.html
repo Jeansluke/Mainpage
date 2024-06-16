@@ -49,26 +49,51 @@
             font-size: 1.2em;
             margin-top: 10px;
         }
-        #bankCallModal {
+        #phoneCallModal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+        .modal-content {
+            text-align: center;
         }
         .modal-buttons {
             margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .modal-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .modal-buttons button.answer {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+        .modal-buttons button.decline {
+            background-color: #f44336;
+            color: #fff;
+        }
+        .modal-buttons button:hover {
+            opacity: 0.8;
+        }
+        #spinButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
         }
         @keyframes spin {
             0% { transform: translateY(0); }
@@ -129,12 +154,13 @@
     <div class="money" id="money">Money: $<span id="moneyAmount">100</span></div>
     <div id="result" class="result"></div>
 
-    <!-- Bank Call Modal -->
-    <div id="bankCallModal">
+    <!-- Phone Call Modal -->
+    <div id="phoneCallModal">
         <div class="modal-content">
-            <p>Your bank account is below -$10. Please deposit funds to continue playing.</p>
+            <p>You have an incoming call from the bank.</p>
             <div class="modal-buttons">
-                <button onclick="dismissModal()">Dismiss</button>
+                <button class="answer" onclick="answerCall()">Answer</button>
+                <button class="decline" onclick="declineCall()">Decline</button>
             </div>
         </div>
     </div>
@@ -149,7 +175,7 @@
 
         function spin() {
             if (money < 10) {
-                showBankCallModal();
+                showPhoneCallModal();
                 return;
             }
 
@@ -197,14 +223,22 @@
             document.getElementById('moneyAmount').innerText = money;
         }
 
-        function showBankCallModal() {
-            var modal = document.getElementById('bankCallModal');
-            modal.style.display = 'flex';
+        function showPhoneCallModal() {
+            var modal = document.getElementById('phoneCallModal');
+            modal.style.display = 'block';
         }
 
-        function dismissModal() {
-            var modal = document.getElementById('bankCallModal');
+        function answerCall() {
+            var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
+            // You can add logic here to handle answering the call, e.g., show bank communication message
+            alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
+        }
+
+        function declineCall() {
+            var modal = document.getElementById('phoneCallModal');
+            modal.style.display = 'none';
+            // Continue playing logic can be added here if needed
         }
     </script>
 </body>
