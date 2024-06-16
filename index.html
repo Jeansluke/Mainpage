@@ -31,6 +31,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            animation: spin infinite linear;
         }
         .symbol {
             width: 100%;
@@ -46,10 +47,7 @@
         }
         @keyframes spin {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-500%); }
-        }
-        .spinning .symbols {
-            animation: spin 1s linear infinite;
+            100% { transform: translateY(-500px); }
         }
     </style>
 </head>
@@ -63,7 +61,6 @@
                 <div class="symbol">🍉</div>
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
-                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -78,7 +75,6 @@
                 <div class="symbol">🍉</div>
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
-                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -93,7 +89,6 @@
                 <div class="symbol">🍉</div>
                 <div class="symbol">⭐</div>
                 <div class="symbol">7</div>
-                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -119,21 +114,20 @@
 
             slots.forEach((slot, index) => {
                 var symbolContainer = slot.querySelector('.symbols');
-                symbolContainer.classList.add('spinning');
+                symbolContainer.style.animationDuration = `${2 + index}s`; // Slightly different durations for each slot
 
                 setTimeout(() => {
                     var randomIndex = getRandomInt(symbols.length);
                     var translateY = -randomIndex * 100;
 
-                    symbolContainer.style.transform = `translateY(${translateY}px)`;
-                    symbolContainer.classList.remove('spinning');
-
+                    symbolContainer.style.animation = 'none'; // Stop the animation
+                    symbolContainer.style.transform = `translateY(${translateY}px)`; // Position the symbols
                     finalSymbols.push(symbols[randomIndex]);
 
                     if (index === 2) { // Last slot to spin
                         checkResult(finalSymbols);
                     }
-                }, 1000 + (index * 500)); // Stagger the spins
+                }, (2 + index) * 1000); // Match the duration of the animation
             });
         }
 
