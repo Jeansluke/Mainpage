@@ -167,7 +167,7 @@
 
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
-        var money = 10; // Starting money
+        var money = 100; // Starting money
         var canSpin = true; // Flag to allow spinning
 
         function getRandomInt(max) {
@@ -241,15 +241,15 @@
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
             alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
+            canSpin = true; // Allow spinning after answering
+            document.getElementById('spinButton').disabled = false; // Enable spin button
         }
 
         function dismissModal() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            if (money > -10) {
-                canSpin = true; // Allow spinning again if balance is above -$10
-                document.getElementById('spinButton').disabled = false; // Enable spin button
-            }
+            canSpin = true; // Allow spinning after dismissing
+            document.getElementById('spinButton').disabled = false; // Enable spin button
         }
     </script>
 </body>
