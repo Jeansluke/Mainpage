@@ -30,34 +30,56 @@
             font-size: 1.5em;
             margin-top: 20px;
         }
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-300%); }
+        }
+        .spinning {
+            animation: spin 1s ease-in-out infinite;
+        }
     </style>
 </head>
 <body>
     <h1>Slot Machine</h1>
     <div class="slot-machine">
-        <div id="slot1" class="slot">7</div>
-        <div id="slot2" class="slot">7</div>
-        <div id="slot3" class="slot">7</div>
+        <div id="slot1" class="slot">🍒</div>
+        <div id="slot2" class="slot">🍒</div>
+        <div id="slot3" class="slot">🍒</div>
     </div>
     <button onclick="spin()">Spin</button>
     <div id="result" class="result"></div>
 
     <script>
+        var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
+
+        function getRandomSymbol() {
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
         function spin() {
-            var symbols = ['🍒', 'https://tenor.com/view/xafer-roblox-robux-mrbeast-gif-2262045341761960066', '🍉', '⭐', '7'];
-            var slot1 = symbols[Math.floor(Math.random() * symbols.length)];
-            var slot2 = symbols[Math.floor(Math.random() * symbols.length)];
-            var slot3 = symbols[Math.floor(Math.random() * symbols.length)];
+            document.getElementById('result').innerText = "";
+            var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
 
-            document.getElementById('slot1').innerText = slot1;
-            document.getElementById('slot2').innerText = slot2;
-            document.getElementById('slot3').innerText = slot3;
+            slots.forEach(slot => {
+                slot.classList.add('spinning');
+            });
 
-            if (slot1 === slot2 && slot2 === slot3) {
-                document.getElementById('result').innerText = "You win!";
-            } else {
-                document.getElementById('result').innerText = "Try again!";
-            }
+            setTimeout(() => {
+                slots.forEach(slot => {
+                    slot.classList.remove('spinning');
+                    slot.innerText = getRandomSymbol();
+                });
+
+                var slot1 = slots[0].innerText;
+                var slot2 = slots[1].innerText;
+                var slot3 = slots[2].innerText;
+
+                if (slot1 === slot2 && slot2 === slot3) {
+                    document.getElementById('result').innerText = "You win!";
+                } else {
+                    document.getElementById('result').innerText = "Try again!";
+                }
+            }, 1000);
         }
     </script>
 </body>
