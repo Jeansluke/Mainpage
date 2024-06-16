@@ -165,10 +165,7 @@
         </div>
     </div>
 
-    <div>
-        <input type="checkbox" id="redirectCheckbox" onclick="redirectToWebsite()">
-        <label for="redirectCheckbox">Go to website</label>
-    </div>
+    <button id="redirectButton" onclick="redirectToWebsite()">Go to website</button>
 
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
@@ -261,9 +258,7 @@
         }
 
         function redirectToWebsite() {
-            if (document.getElementById('redirectCheckbox').checked) {
-                window.location.href = "https://jeansluke.github.io/Mainpage/index.html";
-            }
+            window.location.href = "https://jeansluke.github.io/Mainpage/index.html";
         }
     </script>
 </body>
