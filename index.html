@@ -103,6 +103,8 @@
     <button id="spinButton" onclick="spin()">Spin</button>
     <div id="result" class="result"></div>
 
+    <button id="redirectButton" onclick="redirectToWebsite()">Go to Test Page</button>
+
     <script>
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7'];
         var isSpinning = false;
@@ -153,6 +155,10 @@
             } else {
                 document.getElementById('result').innerText = "Try again!";
             }
+        }
+
+        function redirectToWebsite() {
+            window.location.href = "https://jeansluke.github.io/Mainpage/test.html";
         }
     </script>
 </body>
