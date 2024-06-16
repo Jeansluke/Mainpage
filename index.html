@@ -51,7 +51,13 @@
     <h1>Slot Machine</h1>
     <div class="slot-machine">
         <div id="slot1" class="slot">
-            <div class="symbols">
+            <div class="symbols" id="symbols1">
+                <div class="symbol">🍒</div>
+                <div class="symbol">🍋</div>
+                <div class="symbol">🍉</div>
+                <div class="symbol">⭐</div>
+                <div class="symbol">7</div>
+                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -60,7 +66,13 @@
             </div>
         </div>
         <div id="slot2" class="slot">
-            <div class="symbols">
+            <div class="symbols" id="symbols2">
+                <div class="symbol">🍒</div>
+                <div class="symbol">🍋</div>
+                <div class="symbol">🍉</div>
+                <div class="symbol">⭐</div>
+                <div class="symbol">7</div>
+                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -69,7 +81,13 @@
             </div>
         </div>
         <div id="slot3" class="slot">
-            <div class="symbols">
+            <div class="symbols" id="symbols3">
+                <div class="symbol">🍒</div>
+                <div class="symbol">🍋</div>
+                <div class="symbol">🍉</div>
+                <div class="symbol">⭐</div>
+                <div class="symbol">7</div>
+                <!-- Repeat symbols for looping effect -->
                 <div class="symbol">🍒</div>
                 <div class="symbol">🍋</div>
                 <div class="symbol">🍉</div>
@@ -90,13 +108,12 @@
 
         function spin() {
             document.getElementById('result').innerText = "";
-            var slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
+            var slots = [document.getElementById('symbols1'), document.getElementById('symbols2'), document.getElementById('symbols3')];
             var finalSymbols = [];
 
-            slots.forEach((slot, index) => {
-                var symbolContainer = slot.querySelector('.symbols');
+            slots.forEach((symbolContainer, index) => {
                 var randomIndex = getRandomInt(symbols.length);
-                var translateY = -randomIndex * 100;
+                var translateY = -(randomIndex + symbols.length) * 100;
 
                 finalSymbols.push(symbols[randomIndex]);
 
