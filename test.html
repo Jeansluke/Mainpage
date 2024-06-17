@@ -113,6 +113,11 @@
             0% { transform: rotateX(0); }
             100% { transform: rotateX(-360deg); }
         }
+
+        @keyframes stop {
+            from { transform: rotateX(var(--start-angle)); }
+            to { transform: rotateX(var(--end-angle)); }
+        }
     </style>
 </head>
 <body>
@@ -209,7 +214,10 @@
                 // Stop the spinning after some time
                 setTimeout(() => {
                     symbolContainer.style.animation = 'none'; // Stop the animation
-                    symbolContainer.style.transform = `rotateX(${rotateX}deg)`; // Position the symbols
+                    symbolContainer.style.setProperty('--start-angle', symbolContainer.style.transform);
+                    symbolContainer.style.setProperty('--end-angle', `rotateX(${rotateX}deg)`);
+                    symbolContainer.style.animation = `stop 1s forwards`;
+                    
                     finalSymbols.push(symbols[randomIndex]);
 
                     if (index === slots.length - 1) { // Last slot to spin
