@@ -88,7 +88,7 @@
             border-radius: 5px;
             font-size: 1em;
         }
-        .modal-buttons button.answer {
+        .modal-buttons button.pay {
             background-color: #4CAF50;
             color: #fff;
         }
@@ -134,8 +134,8 @@
         <div class="modal-content">
             <p>You have an incoming call from the bank.</p>
             <div class="modal-buttons">
-                <button class="answer" onclick="answerCall()">Answer</button>
-                <button class="decline" onclick="dismissModal()">Decline</button>
+                <button class="pay" onclick="payBank()">Pay the Bank</button>
+                <button class="decline" onclick="tellOff()">Tell them to F*** off</button>
             </div>
         </div>
     </div>
@@ -147,81 +147,78 @@
         var callDeclined = false; // Flag to track if call was declined
 
         function getRandomInt(max) {
-            // Generate a random index that corresponds to the top half of the rotation (0 to max/2)
-            return Math.floor(Math.random() * (max / 2));
+            return Math.floor(Math.random() * (max / 2)); // Generate index for top half rotation
         }
 
-
-function spin() {
-    if (!canSpin) {
-        return; // Don't spin if spinning is disabled
-    }
-
-    if (balance <= -10 && !callDeclined) {
-        showPhoneCallModal();
-        return; // Stop spinning if balance is -10 or below and call not declined
-    }
-
-    balance -= 10; // Deduct $10 per spin
-    document.getElementById('balanceAmount').innerText = balance.toFixed(2);
-
-    document.getElementById('result').innerText = "";
-    document.getElementById('spinButton').disabled = true;
-
-    var slots = [
-        document.getElementById('slot1'), 
-        document.getElementById('slot2'), 
-        document.getElementById('slot3'),
-        document.getElementById('slot4'),
-        document.getElementById('slot5')
-    ];
-    var finalSymbols = [];
-
-    canSpin = false; // Disable spinning during animation
-
-    slots.forEach((slot, index) => {
-        var symbolsContainer = document.createElement('div');
-        symbolsContainer.classList.add('symbols');
-
-        // Generate symbols
-        symbols.forEach((symbol, symbolIndex) => {
-            var symbolDiv = document.createElement('div');
-            symbolDiv.classList.add('symbol');
-            symbolDiv.innerText = symbol;
-            symbolDiv.style.transform = `rotateX(-${symbolIndex * 72}deg) translateZ(50px)`; // Negative rotateX for downward spin
-            symbolsContainer.appendChild(symbolDiv);
-        });
-
-        slot.innerHTML = ''; // Clear previous symbols
-        slot.appendChild(symbolsContainer);
-
-        var symbolContainer = slot.querySelector('.symbols');
-        var randomIndex = getRandomInt(symbols.length);
-        var rotateX = -randomIndex * 72;
-
-        // Remove previous animation if any
-        symbolContainer.style.transition = 'none';
-        symbolContainer.offsetHeight; // Trigger reflow
-
-        // Start the spinning animation
-        var spins = 10; // Number of rotations
-        var duration = 250 * spins; // Total duration in milliseconds
-        symbolContainer.style.transition = `transform ${duration / 1000}s ease-out`; // Smooth transition for calculated duration
-        symbolContainer.style.transform = `rotateX(-${rotateX + spins * 360}deg)`; // Position the symbols with negative rotateX
-
-        // Stop the spinning after some time
-        setTimeout(() => {
-            finalSymbols.push(symbols[randomIndex]);
-
-            if (index === slots.length - 1) { // Last slot to spin
-                checkResult(finalSymbols);
-                document.getElementById('spinButton').disabled = false;
-                canSpin = true; // Allow spinning again
+        function spin() {
+            if (!canSpin) {
+                return; // Don't spin if spinning is disabled
             }
-        }, duration); // Match the duration of the animation
-    });
-}
 
+            if (balance <= -10 && !callDeclined) {
+                showPhoneCallModal();
+                return; // Stop spinning if balance is -10 or below and call not declined
+            }
+
+            balance -= 10; // Deduct $10 per spin
+            document.getElementById('balanceAmount').innerText = balance.toFixed(2);
+
+            document.getElementById('result').innerText = "";
+            document.getElementById('spinButton').disabled = true;
+
+            var slots = [
+                document.getElementById('slot1'), 
+                document.getElementById('slot2'), 
+                document.getElementById('slot3'),
+                document.getElementById('slot4'),
+                document.getElementById('slot5')
+            ];
+            var finalSymbols = [];
+
+            canSpin = false; // Disable spinning during animation
+
+            slots.forEach((slot, index) => {
+                var symbolsContainer = document.createElement('div');
+                symbolsContainer.classList.add('symbols');
+                
+                // Generate symbols
+                symbols.forEach((symbol, symbolIndex) => {
+                    var symbolDiv = document.createElement('div');
+                    symbolDiv.classList.add('symbol');
+                    symbolDiv.innerText = symbol;
+                    symbolDiv.style.transform = `rotateX(-${symbolIndex * 72}deg) translateZ(50px)`; // Negative rotateX for downward spin
+                    symbolsContainer.appendChild(symbolDiv);
+                });
+
+                slot.innerHTML = ''; // Clear previous symbols
+                slot.appendChild(symbolsContainer);
+
+                var symbolContainer = slot.querySelector('.symbols');
+                var randomIndex = getRandomInt(symbols.length);
+                var rotateX = -randomIndex * 72;
+
+                // Remove previous animation if any
+                symbolContainer.style.transition = 'none';
+                symbolContainer.offsetHeight; // Trigger reflow
+
+                // Start the spinning animation
+                var spins = 3; // Number of rotations
+                var duration = 3000 * spins; // Total duration in milliseconds
+                symbolContainer.style.transition = `transform ${duration / 1000}s ease-out`; // Smooth transition for calculated duration
+                symbolContainer.style.transform = `rotateX(-${rotateX + spins * 360}deg)`; // Position the symbols with negative rotateX
+
+                // Stop the spinning after some time
+                setTimeout(() => {
+                    finalSymbols.push(symbols[randomIndex]);
+
+                    if (index === slots.length - 1) { // Last slot to spin
+                        checkResult(finalSymbols);
+                        document.getElementById('spinButton').disabled = false;
+                        canSpin = true; // Allow spinning again
+                    }
+                }, duration); // Match the duration of the animation
+            });
+        }
 
         function checkResult(finalSymbols) {
             var isWin = finalSymbols.every(symbol => symbol === finalSymbols[0]);
@@ -240,20 +237,23 @@ function spin() {
             canSpin = false; // Disable spinning while modal is shown
         }
 
-        function answerCall() {
+        function payBank() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            alert("Bank: Your account balance is below -$10. Please deposit funds to continue playing.");
-            balance = 40.00; // Reset balance after answering the call
+            alert("Bank: Thank you for your payment. Your balance has been reset.");
+            balance = 40.00; // Reset balance after paying
             document.getElementById('balanceAmount').innerText = balance.toFixed(2);
             canSpin = true; // Re-enable spinning
         }
 
-        function dismissModal() {
+        function tellOff() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
+            alert("Bank: We're sorry to hear that. Your account remains restricted.");
+            balance = 40.00; // Reset balance after declining rudely
+            document.getElementById('balanceAmount').innerText = balance.toFixed(2);
+            callDeclined = true; // Flag call as declined rudely
             canSpin = true; // Re-enable spinning
-            callDeclined = true; 
         }
     </script>
 </body>
