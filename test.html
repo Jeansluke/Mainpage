@@ -132,6 +132,12 @@
             padding: 20px;
             border-radius: 10px;
         }
+        #overdueMessage {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -156,7 +162,7 @@
     <div id="phoneCallModal">
         <div class="modal-content">
             <p>You have an incoming call from the bank.</p>
-            <div class="modal-buttons" id="modalButtons">
+            <div class="modal-buttons">
                 <button class="answer" onclick="answerCall()">Answer</button>
                 <button class="decline" onclick="declineCall()">Decline</button>
             </div>
@@ -166,7 +172,7 @@
     <!-- Payment Modal -->
     <div id="paymentModal">
         <div class="modal-content">
-            <p style="background-color: #fff; padding: 10px; border-radius: 5px;">You have an overdue payment to the bank.</p>
+            <p id="overdueMessage">You have an overdue payment to the bank.</p>
             <div class="modal-buttons">
                 <button class="pay" onclick="payBank()">Pay</button>
                 <button class="not-pay" onclick="notPay()">Do Not Pay</button>
@@ -283,20 +289,25 @@
         function declineCall() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            alert("Bank: We'll contact you later.");
-            canSpin = true; // Re-enable spinning
-            callReceived = false; // Reset call received status
+
+            // Display overdue message when declining
+            showOverdueMessage();
         }
 
-        function showPaymentModal() {
+        function showOverdueMessage() {
             var modal = document.getElementById('paymentModal');
+            var overdueMessage = document.getElementById('overdueMessage');
+            overdueMessage.style.display = 'block';
             modal.style.display = 'block';
             canSpin = false; // Disable spinning while modal is shown
+            callReceived = false; // Reset call received status
         }
 
         function payBank() {
             var modal = document.getElementById('paymentModal');
             modal.style.display = 'none';
+            var overdueMessage = document.getElementById('overdueMessage');
+            overdueMessage.style.display = 'none';
             alert("Bank: Thank you for your payment. Your balance has been reset.");
             balance = 40.00; // Reset balance after paying
             document.getElementById('balanceAmount').innerText = balance.toFixed(2);
@@ -307,6 +318,8 @@
         function notPay() {
             var modal = document.getElementById('paymentModal');
             modal.style.display = 'none';
+            var overdueMessage = document.getElementById('overdueMessage');
+            overdueMessage.style.display = 'none';
             alert("Bank: We'll contact you later.");
             canSpin = true; // Re-enable spinning
             callReceived = false; // Reset call received status
