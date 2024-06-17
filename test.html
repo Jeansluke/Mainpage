@@ -152,74 +152,75 @@
         }
 
 
+function spin() {
+    if (!canSpin) {
+        return; // Don't spin if spinning is disabled
+    }
 
-        function spin() {
-            if (!canSpin) {
-                return; // Don't spin if spinning is disabled
+    if (balance <= -10 && !callDeclined) {
+        showPhoneCallModal();
+        return; // Stop spinning if balance is -10 or below and call not declined
+    }
+
+    balance -= 10; // Deduct $10 per spin
+    document.getElementById('balanceAmount').innerText = balance.toFixed(2);
+
+    document.getElementById('result').innerText = "";
+    document.getElementById('spinButton').disabled = true;
+
+    var slots = [
+        document.getElementById('slot1'), 
+        document.getElementById('slot2'), 
+        document.getElementById('slot3'),
+        document.getElementById('slot4'),
+        document.getElementById('slot5')
+    ];
+    var finalSymbols = [];
+
+    canSpin = false; // Disable spinning during animation
+
+    slots.forEach((slot, index) => {
+        var symbolsContainer = document.createElement('div');
+        symbolsContainer.classList.add('symbols');
+
+        // Generate symbols
+        symbols.forEach((symbol, symbolIndex) => {
+            var symbolDiv = document.createElement('div');
+            symbolDiv.classList.add('symbol');
+            symbolDiv.innerText = symbol;
+            symbolDiv.style.transform = `rotateX(${symbolIndex * 72}deg) translateZ(50px)`; // 72 degrees for 5 symbols
+            symbolsContainer.appendChild(symbolDiv);
+        });
+
+        slot.innerHTML = ''; // Clear previous symbols
+        slot.appendChild(symbolsContainer);
+
+        var symbolContainer = slot.querySelector('.symbols');
+        var randomIndex = getRandomInt(symbols.length);
+        var rotateX = -randomIndex * 72;
+
+        // Remove previous animation if any
+        symbolContainer.style.transition = 'none';
+        symbolContainer.offsetHeight; // Trigger reflow
+
+        // Start the spinning animation
+        var spins = 3; // Number of rotations
+        var duration = 3000 * spins; // Total duration in milliseconds
+        symbolContainer.style.transition = `transform ${duration / 1000}s ease-out`; // Smooth transition for calculated duration
+        symbolContainer.style.transform = `rotateX(${rotateX + spins * 360}deg)`; // Position the symbols
+
+        // Stop the spinning after some time
+        setTimeout(() => {
+            finalSymbols.push(symbols[randomIndex]);
+
+            if (index === slots.length - 1) { // Last slot to spin
+                checkResult(finalSymbols);
+                document.getElementById('spinButton').disabled = false;
+                canSpin = true; // Allow spinning again
             }
-
-            if (balance <= -10 && !callDeclined) {
-                showPhoneCallModal();
-                return; // Stop spinning if balance is -10 or below and call not declined
-            }
-
-            balance -= 10; // Deduct $10 per spin
-            document.getElementById('balanceAmount').innerText = balance.toFixed(2);
-
-            document.getElementById('result').innerText = "";
-            document.getElementById('spinButton').disabled = true;
-
-            var slots = [
-                document.getElementById('slot1'), 
-                document.getElementById('slot2'), 
-                document.getElementById('slot3'),
-                document.getElementById('slot4'),
-                document.getElementById('slot5')
-            ];
-            var finalSymbols = [];
-
-            canSpin = false; // Disable spinning during animation
-
-            slots.forEach((slot, index) => {
-                var symbolsContainer = document.createElement('div');
-                symbolsContainer.classList.add('symbols');
-                
-                // Generate symbols
-                symbols.forEach((symbol, symbolIndex) => {
-                    var symbolDiv = document.createElement('div');
-                    symbolDiv.classList.add('symbol');
-                    symbolDiv.innerText = symbol;
-                    symbolDiv.style.transform = `rotateX(${symbolIndex * 72}deg) translateZ(50px)`; // 72 degrees for 5 symbols
-                    symbolsContainer.appendChild(symbolDiv);
-                });
-
-                slot.innerHTML = ''; // Clear previous symbols
-                slot.appendChild(symbolsContainer);
-
-                var symbolContainer = slot.querySelector('.symbols');
-                var randomIndex = getRandomInt(symbols.length);
-                var rotateX = -randomIndex * 72;
-
-                // Remove previous animation if any
-                symbolContainer.style.transition = 'none';
-                symbolContainer.offsetHeight; // Trigger reflow
-
-                // Start the spinning animation
-                symbolContainer.style.transition = 'transform 3s ease-out'; // Smooth transition for 3 seconds
-                symbolContainer.style.transform = `rotateX(${rotateX}deg)`; // Position the symbols
-
-                // Stop the spinning after some time
-                setTimeout(() => {
-                    finalSymbols.push(symbols[randomIndex]);
-
-                    if (index === slots.length - 1) { // Last slot to spin
-                        checkResult(finalSymbols);
-                        document.getElementById('spinButton').disabled = false;
-                        canSpin = true; // Allow spinning again
-                    }
-                }, 3000 + (index * 500)); // Match the duration of the animation (3 seconds total)
-            });
-        }
+        }, duration); // Match the duration of the animation
+    });
+}
 
         function checkResult(finalSymbols) {
             var isWin = finalSymbols.every(symbol => symbol === finalSymbols[0]);
