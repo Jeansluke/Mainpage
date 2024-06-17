@@ -22,7 +22,8 @@
         }
         .slot {
             width: 100px;
-            height: 300px;
+            height: 100px;
+            perspective: 1000px; /* Add perspective for 3D effect */
             overflow: hidden;
             margin: 0 10px;
             background-color: #000;
@@ -32,18 +33,22 @@
         .symbols {
             position: absolute;
             width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            transform-style: preserve-3d; /* Enable 3D transformations */
         }
         .symbol {
             width: 100%;
-            height: 100px;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2em;
             color: #fff;
+            position: absolute;
+            backface-visibility: hidden; /* Hide the back face */
         }
         .result {
             font-size: 1.5em;
@@ -105,8 +110,8 @@
             border-radius: 5px;
         }
         @keyframes spin {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100%); }
+            0% { transform: rotateX(0); }
+            100% { transform: rotateX(-360deg); }
         }
     </style>
 </head>
@@ -159,7 +164,7 @@
                 return; // Stop spinning if balance is -10 or below and call not declined
             }
 
-            balance -= 10; // Deduct $0.25 per spin
+            balance -= 10; // Deduct $10 per spin
             document.getElementById('balanceAmount').innerText = balance.toFixed(2);
 
             document.getElementById('result').innerText = "";
@@ -181,18 +186,11 @@
                 symbolsContainer.classList.add('symbols');
                 
                 // Generate symbols
-                symbols.forEach(symbol => {
+                symbols.forEach((symbol, symbolIndex) => {
                     var symbolDiv = document.createElement('div');
                     symbolDiv.classList.add('symbol');
                     symbolDiv.innerText = symbol;
-                    symbolsContainer.appendChild(symbolDiv);
-                });
-
-                // Append a second set of symbols to ensure looping
-                symbols.forEach(symbol => {
-                    var symbolDiv = document.createElement('div');
-                    symbolDiv.classList.add('symbol');
-                    symbolDiv.innerText = symbol;
+                    symbolDiv.style.transform = `rotateX(${symbolIndex * 72}deg) translateZ(50px)`; // 72 degrees for 5 symbols
                     symbolsContainer.appendChild(symbolDiv);
                 });
 
@@ -201,7 +199,7 @@
 
                 var symbolContainer = slot.querySelector('.symbols');
                 var randomIndex = getRandomInt(symbols.length);
-                var translateY = -randomIndex * 100;
+                var rotateX = -randomIndex * 72;
 
                 // Remove previous animation if any
                 symbolContainer.style.animation = 'none';
@@ -211,7 +209,7 @@
                 // Stop the spinning after some time
                 setTimeout(() => {
                     symbolContainer.style.animation = 'none'; // Stop the animation
-                    symbolContainer.style.transform = `translateY(${translateY}px)`; // Position the symbols
+                    symbolContainer.style.transform = `rotateX(${rotateX}deg)`; // Position the symbols
                     finalSymbols.push(symbols[randomIndex]);
 
                     if (index === slots.length - 1) { // Last slot to spin
