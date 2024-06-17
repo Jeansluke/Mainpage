@@ -147,8 +147,10 @@
         var callDeclined = false; // Flag to track if call was declined
 
         function getRandomInt(max) {
-            return Math.floor(Math.random() * max); // Generates 0, 1, 2, 3, or 4
+            // Generate a random index that corresponds to the top half of the rotation (0 to max/2)
+            return Math.floor(Math.random() * (max / 2));
         }
+
 
 
         function spin() {
