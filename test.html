@@ -201,7 +201,7 @@
 
                 var symbolContainer = slot.querySelector('.symbols');
                 var randomIndex = getRandomInt(symbols.length);
-                var translateY = -randomIndex * 50;
+                var translateY = -randomIndex * 100;
 
                 // Remove previous animation if any
                 symbolContainer.style.animation = 'none';
@@ -219,7 +219,7 @@
                         document.getElementById('spinButton').disabled = false;
                         canSpin = true; // Allow spinning again
                     }
-                }, 2000 + (index * 500)); // Match the duration of the animation
+                }, 2000 + (index * 250)); // Match the duration of the animation
             });
         }
 
