@@ -109,15 +109,6 @@
             border: none;
             border-radius: 5px;
         }
-        @keyframes spin {
-            0% { transform: rotateX(0); }
-            100% { transform: rotateX(-360deg); }
-        }
-
-        @keyframes stop {
-            from { transform: rotateX(var(--start-angle)); }
-            to { transform: rotateX(var(--end-angle)); }
-        }
     </style>
 </head>
 <body>
@@ -207,17 +198,15 @@
                 var rotateX = -randomIndex * 72;
 
                 // Remove previous animation if any
-                symbolContainer.style.animation = 'none';
+                symbolContainer.style.transition = 'none';
                 symbolContainer.offsetHeight; // Trigger reflow
-                symbolContainer.style.animation = `spin 1s linear infinite`;
+
+                // Start the spinning animation
+                symbolContainer.style.transition = 'transform 3s ease-out'; // Smooth transition for 3 seconds
+                symbolContainer.style.transform = `rotateX(${rotateX}deg)`; // Position the symbols
 
                 // Stop the spinning after some time
                 setTimeout(() => {
-                    symbolContainer.style.animation = 'none'; // Stop the animation
-                    symbolContainer.style.setProperty('--start-angle', symbolContainer.style.transform);
-                    symbolContainer.style.setProperty('--end-angle', `rotateX(${rotateX}deg)`);
-                    symbolContainer.style.animation = `stop 1s forwards`;
-                    
                     finalSymbols.push(symbols[randomIndex]);
 
                     if (index === slots.length - 1) { // Last slot to spin
@@ -225,7 +214,7 @@
                         document.getElementById('spinButton').disabled = false;
                         canSpin = true; // Allow spinning again
                     }
-                }, 1000 + (index * 500)); // Match the duration of the animation
+                }, 3000 + (index * 500)); // Match the duration of the animation (3 seconds total)
             });
         }
 
