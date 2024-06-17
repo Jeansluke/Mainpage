@@ -113,6 +113,25 @@
             border: none;
             border-radius: 5px;
         }
+        #paymentModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+        #paymentModal .modal-content {
+            text-align: center;
+            background-color: #fff; /* White background for payment modal */
+            padding: 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -145,9 +164,9 @@
     </div>
 
     <!-- Payment Modal -->
-    <div id="paymentModal" style="display: none;">
+    <div id="paymentModal">
         <div class="modal-content">
-            <p>You have an overdue payment to the bank.</p>
+            <p style="background-color: #fff; padding: 10px; border-radius: 5px;">You have an overdue payment to the bank.</p>
             <div class="modal-buttons">
                 <button class="pay" onclick="payBank()">Pay</button>
                 <button class="not-pay" onclick="notPay()">Do Not Pay</button>
@@ -248,7 +267,6 @@
 
         function showPhoneCallModal() {
             var modal = document.getElementById('phoneCallModal');
-            var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'block';
             canSpin = false; // Disable spinning while modal is shown
             callReceived = true; // Mark call as received
@@ -257,6 +275,8 @@
         function answerCall() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
+
+            // Show payment modal after answering the call
             showPaymentModal();
         }
 
