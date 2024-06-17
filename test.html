@@ -92,8 +92,12 @@
             background-color: #4CAF50;
             color: #fff;
         }
-        .modal-buttons button.decline {
+        .modal-buttons button.not-pay {
             background-color: #f44336;
+            color: #fff;
+        }
+        .modal-buttons button.decline {
+            background-color: #ff9800;
             color: #fff;
         }
         .modal-buttons button:hover {
@@ -133,9 +137,20 @@
     <div id="phoneCallModal">
         <div class="modal-content">
             <p>You have an incoming call from the bank.</p>
-            <div class="modal-buttons">
-                <button class="pay" onclick="payBank()">Pay the Bank</button>
+            <div class="modal-buttons" id="modalButtons">
+                <button class="answer" onclick="answerCall()">Answer</button>
                 <button class="decline" onclick="declineCall()">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" style="display: none;">
+        <div class="modal-content">
+            <p>You have an overdue payment to the bank.</p>
+            <div class="modal-buttons">
+                <button class="pay" onclick="payBank()">Pay</button>
+                <button class="not-pay" onclick="notPay()">Do Not Pay</button>
             </div>
         </div>
     </div>
@@ -233,13 +248,34 @@
 
         function showPhoneCallModal() {
             var modal = document.getElementById('phoneCallModal');
+            var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'block';
             canSpin = false; // Disable spinning while modal is shown
             callReceived = true; // Mark call as received
         }
 
-        function payBank() {
+        function answerCall() {
             var modal = document.getElementById('phoneCallModal');
+            modal.style.display = 'none';
+            showPaymentModal();
+        }
+
+        function declineCall() {
+            var modal = document.getElementById('phoneCallModal');
+            modal.style.display = 'none';
+            alert("Bank: We'll contact you later.");
+            canSpin = true; // Re-enable spinning
+            callReceived = false; // Reset call received status
+        }
+
+        function showPaymentModal() {
+            var modal = document.getElementById('paymentModal');
+            modal.style.display = 'block';
+            canSpin = false; // Disable spinning while modal is shown
+        }
+
+        function payBank() {
+            var modal = document.getElementById('paymentModal');
             modal.style.display = 'none';
             alert("Bank: Thank you for your payment. Your balance has been reset.");
             balance = 40.00; // Reset balance after paying
@@ -248,8 +284,8 @@
             callReceived = false; // Reset call received status
         }
 
-        function declineCall() {
-            var modal = document.getElementById('phoneCallModal');
+        function notPay() {
+            var modal = document.getElementById('paymentModal');
             modal.style.display = 'none';
             alert("Bank: We'll contact you later.");
             canSpin = true; // Re-enable spinning
