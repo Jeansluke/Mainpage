@@ -204,7 +204,7 @@ function spin() {
         symbolContainer.offsetHeight; // Trigger reflow
 
         // Start the spinning animation
-        var spins = 10; // Number of rotations
+        var spins = 5; // Number of rotations
         var duration = 500 * spins; // Total duration in milliseconds
         symbolContainer.style.transition = `transform ${duration / 1000}s ease-out`; // Smooth transition for calculated duration
         symbolContainer.style.transform = `rotateX(-${rotateX + spins * 360}deg)`; // Position the symbols with negative rotateX
