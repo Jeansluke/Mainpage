@@ -135,7 +135,7 @@
             <p>You have an incoming call from the bank.</p>
             <div class="modal-buttons">
                 <button class="pay" onclick="payBank()">Pay the Bank</button>
-                <button class="decline" onclick="tellOff()">Tell them to F*** off</button>
+                <button class="decline" onclick="declineCall()">Decline</button>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
         var symbols = ['🍒', '🍋', '🍉', '⭐', '7']; // Symbols array
         var balance = 40.00; // Starting balance
         var canSpin = true; // Flag to allow spinning
-        var callDeclined = false; // Flag to track if call was declined
+        var callReceived = false; // Flag to track if call was received
 
         function getRandomInt(max) {
             return Math.floor(Math.random() * (max / 2)); // Generate index for top half rotation
@@ -155,9 +155,9 @@
                 return; // Don't spin if spinning is disabled
             }
 
-            if (balance <= -10 && !callDeclined) {
+            if (balance <= -10 && !callReceived) {
                 showPhoneCallModal();
-                return; // Stop spinning if balance is -10 or below and call not declined
+                return; // Stop spinning if balance is -10 or below and call not received
             }
 
             balance -= 10; // Deduct $10 per spin
@@ -235,6 +235,7 @@
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'block';
             canSpin = false; // Disable spinning while modal is shown
+            callReceived = true; // Mark call as received
         }
 
         function payBank() {
@@ -244,16 +245,15 @@
             balance = 40.00; // Reset balance after paying
             document.getElementById('balanceAmount').innerText = balance.toFixed(2);
             canSpin = true; // Re-enable spinning
+            callReceived = false; // Reset call received status
         }
 
-        function tellOff() {
+        function declineCall() {
             var modal = document.getElementById('phoneCallModal');
             modal.style.display = 'none';
-            alert("Bank: We're sorry to hear that. Your account remains restricted.");
-            balance = 40.00; // Reset balance after declining rudely
-            document.getElementById('balanceAmount').innerText = balance.toFixed(2);
-            callDeclined = true; // Flag call as declined rudely
+            alert("Bank: We'll contact you later.");
             canSpin = true; // Re-enable spinning
+            callReceived = false; // Reset call received status
         }
     </script>
 </body>
